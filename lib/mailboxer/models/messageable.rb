@@ -55,10 +55,11 @@ module Mailboxer
       def send_message(recipients, msg_body, subject, sanitize_text=true, attachment=nil)
         convo = Conversation.new({:subject => subject})
         message = messages.new({:body => msg_body, :subject => subject, :attachment => attachment})
+        message.sender = self
         message.conversation = convo
         message.recipients = recipients.is_a?(Array) ? recipients : [recipients]
         message.recipients = message.recipients.uniq
-        return message.deliver(false),sanitize_text
+        return message.deliver false,sanitize_text
       end
 
       #Basic reply method. USE NOT RECOMENDED.
@@ -66,6 +67,7 @@ module Mailboxer
       def reply(conversation, recipients, reply_body, subject=nil, sanitize_text=true, attachment=nil)
         subject = subject || "RE: #{conversation.subject}"
         response = messages.new({:body => reply_body, :subject => subject, :attachment => attachment})
+        response.sender = self
         response.conversation = conversation
         response.recipients = recipients.is_a?(Array) ? recipients : [recipients]
         response.recipients = response.recipients.uniq
