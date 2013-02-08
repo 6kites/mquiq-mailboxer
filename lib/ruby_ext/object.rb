@@ -1,4 +1,4 @@
-class Object
+class ::Object
   def messageable?
     false
   end
