@@ -3,15 +3,15 @@ Gem::Specification.new do |s|
   s.version = "0.9.0"
   s.authors = ["Eduardo Casanova Cuesta", "Nathan Feaver"]
   s.summary = "Messaging system for rails apps."
-  s.description = "The Mailboxer gem, customized for mQuiq:" +
+  s.description = "The Mailboxer gem, customized for mQuiq: " +
                    "A Rails engine that allows any model to act as messageable, adding the ability to exchange messages " +
                    "with any other messageable model, even different ones. It supports the use of conversations with " +
                    "two or more recipients to organize the messages. You have a complete use of a mailbox object for " +
                    "each messageable model that manages an inbox, sentbox and trash for conversations. It also supports " +
                    "sending notifications to messageable models, intended to be used as system notifications."
   s.email = "nathan@6kites.com"
-  s.homepage = "https://github.com/6kites"
-  s.files = `git ls-files`.split("\n")
+  s.homepage = "http://github.com/6kites"
+  s.files = Dir['app/**/*', 'lib/**/*', 'db/migrate/*', './*']
 
   # Gem dependencies
   #
