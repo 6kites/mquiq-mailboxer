@@ -38,6 +38,11 @@ module Mailboxer
         end
       end
 
+      # Model is messageable
+      def messageable?
+        true
+      end
+
       #Gets the mailbox of the messageable
       def mailbox
         @mailbox = Mailbox.new(self) if @mailbox.nil?
