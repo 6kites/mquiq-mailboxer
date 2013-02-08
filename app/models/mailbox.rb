@@ -10,7 +10,7 @@ class Mailbox
   def notifications(options = {})
     #:type => nil is a hack not to give Messages as Notifications
     notifs = Notification.recipient(@messageable).where(:type => nil).order("notifications.created_at DESC")
-    notifs = prepare(notifs)
+    notifs = prepare(notifs, options)
     return notifs
   end
 
@@ -18,7 +18,7 @@ class Mailbox
   def messages(options = {})
     #:type => nil is a hack not to give Messages as Notifications
     messages = Notification.recipient(@messageable).where(:type => 'Message').order("notifications.created_at DESC")
-    messages = prepare(messages)
+    messages = prepare(messages, options)
     return messages
   end
 
