@@ -1,8 +1,10 @@
-module Mailboxer 
+require 'core_ext'
+
+module Mailboxer
   module Models
     autoload :Messageable, 'mailboxer/models/messageable'
-  end  
-  
+  end
+
   mattr_accessor :default_from
   @@default_from = "no-reply@mailboxer.com"
   mattr_accessor :uses_emails
@@ -23,9 +25,9 @@ module Mailboxer
       yield self
     end
    end
-   
+
 end
 # reopen ActiveRecord and include all the above to make
 # them available to all our models if they want it
-require 'mailboxer/engine' 
+require 'mailboxer/engine'
 require 'mailboxer/concerns/configurable_mailer'
