@@ -10,10 +10,16 @@ class Mailbox
   def notifications(options = {})
     #:type => nil is a hack not to give Messages as Notifications
     notifs = Notification.recipient(@messageable).where(:type => nil).order("notifications.created_at DESC")
-    if (options[:read].present? and options[:read]==false) or (options[:unread].present? and options[:unread]==true)
-      notifs = notifs.unread
-    end
-    return notifs 
+    notifs = prepare(notifs)
+    return notifs
+  end
+
+  #Returns the messages for the messageable
+  def messages(options = {})
+    #:type => nil is a hack not to give Messages as Notifications
+    messages = Notification.recipient(@messageable).where(:type => 'Message').order("notifications.created_at DESC")
+    messages = prepare(messages)
+    return messages
   end
 
   #Returns the conversations for the messageable
@@ -116,6 +122,15 @@ class Mailbox
     else
     return nil
     end
+  end
+
+  private
+
+  def prepare notifs, options
+    if (options[:read].present? and options[:read]==false) or (options[:unread].present? and options[:unread]==true)
+      notifs = notifs.unread
+    end
+    notifs
   end
 
 end
