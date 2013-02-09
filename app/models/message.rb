@@ -2,7 +2,7 @@ class Message < Notification
   attr_accessible :attachment
 
   belongs_to :conversation, :validate => true, :autosave => true
-  validates_presence_of :sender
+  validates_presence_of :sender_id
 
   class_attribute :on_deliver_callback
   protected :on_deliver_callback
