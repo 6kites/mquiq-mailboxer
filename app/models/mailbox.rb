@@ -10,7 +10,7 @@ class Mailbox
   def notifications(options = {})
     #:type => nil is a hack not to give Messages as Notifications
     notifs = Notification.recipient(@messageable).where(:type => nil).order("notifications.created_at DESC")
-    notifs = prepare(notifs, options)
+    notifs = refine(notifs, options)
     return notifs
   end
 
@@ -18,7 +18,15 @@ class Mailbox
   def messages(options = {})
     #:type => nil is a hack not to give Messages as Notifications
     messages = Notification.recipient(@messageable).where(:type => 'Message').order("notifications.created_at DESC")
-    messages = prepare(messages, options)
+    if type = options[:type].delete
+      messages = Message.joins('JOIN receipts ON receipts.notification_id = notifications.id')
+      if %w(inbox sentbox trash).include type
+        messages = messages.where('receiver_id = :id AND mailbox_type = :type', {id: @messageable.id, type: type})
+      end
+    else
+      messages = Notification.recipient(@messageable).where(:type => 'Message').order("notifications.created_at DESC")
+    end
+    messages = refine(messages, options)
     return messages
   end
 
@@ -126,7 +134,7 @@ class Mailbox
 
   private
 
-  def prepare notifs, options
+  def refine notifs, options
     if (options[:read].present? and options[:read]==false) or (options[:unread].present? and options[:unread]==true)
       notifs = notifs.unread
     end
