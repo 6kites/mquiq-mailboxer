@@ -18,13 +18,9 @@ class Mailbox
   def messages(options = {})
     #:type => nil is a hack not to give Messages as Notifications
     messages = Notification.recipient(@messageable).where(:type => 'Message').order("notifications.created_at DESC")
-    if type = options.delete(:type)
-      messages = Message.joins('JOIN receipts ON receipts.notification_id = notifications.id')
-      if %w(inbox sentbox trash).include type
-        messages = messages.where('receiver_id = :id AND mailbox_type = :type', {id: @messageable.id, type: type})
-      end
-    else
-      messages = Notification.recipient(@messageable).where(:type => 'Message').order("notifications.created_at DESC")
+    type = options.delete(:type)
+    if (type && %w(inbox sentbox trash).include?(type))
+      messages = messages.where('mailbox_type = ?', type)
     end
     messages = refine(messages, options)
     return messages
