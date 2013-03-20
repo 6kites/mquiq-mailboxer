@@ -59,7 +59,7 @@ module Mailboxer
       #as originator
       def send_message(recipients, msg_body, subject, sanitize_text=true, attachment=nil)
         convo = Conversation.new({:subject => subject})
-        message = messages.new({:body => msg_body, :subject => subject, :attachment => attachment})
+        message = messages.new({:body => msg_body, :subject => subject})
         message.sender = self
         message.conversation = convo
         message.recipients = recipients.is_a?(Array) ? recipients : [recipients]
@@ -71,7 +71,7 @@ module Mailboxer
       #Use reply_to_sender, reply_to_all and reply_to_conversation instead.
       def reply(conversation, recipients, reply_body, subject=nil, sanitize_text=true, attachment=nil)
         subject = subject || "RE: #{conversation.subject}"
-        response = messages.new({:body => reply_body, :subject => subject, :attachment => attachment})
+        response = messages.new({:body => reply_body, :subject => subject})
         response.sender = self
         response.conversation = conversation
         response.recipients = recipients.is_a?(Array) ? recipients : [recipients]
@@ -82,12 +82,12 @@ module Mailboxer
 
       #Replies to the sender of the message in the conversation
       def reply_to_sender(receipt, reply_body, subject=nil, sanitize_text=true, attachment=nil)
-        return reply(receipt.conversation, receipt.message.sender, reply_body, subject, sanitize_text, attachment)
+        return reply(receipt.conversation, receipt.message.sender, reply_body, subject, sanitize_text)
       end
 
       #Replies to all the recipients of the message in the conversation
       def reply_to_all(receipt, reply_body, subject=nil, sanitize_text=true, attachment=nil)
-        return reply(receipt.conversation, receipt.message.recipients, reply_body, subject, sanitize_text, attachment)
+        return reply(receipt.conversation, receipt.message.recipients, reply_body, subject, sanitize_text)
       end
 
       #Replies to all the recipients of the last message in the conversation and untrash any trashed message by messageable
@@ -97,7 +97,7 @@ module Mailboxer
         if should_untrash && mailbox.is_trashed?(conversation)
           mailbox.receipts_for(conversation).untrash
         end
-        return reply(conversation, conversation.last_message.recipients, reply_body, subject, sanitize_text, attachment)
+        return reply(conversation, conversation.last_message.recipients, reply_body, subject, sanitize_text)
       end
 
       #Mark the object as read for messageable.
